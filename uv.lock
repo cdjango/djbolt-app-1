@@ -69,7 +69,7 @@ wheels = [
 
 [[package]]
 name = "django-bolt"
-version = "0.9.0"
+version = "0.9.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -81,11 +81,12 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "uvloop", marker = "sys_platform != 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d7/08/b9f826012c09411aae2413dc79bba41b09784c5a207334ceef52a070b415/django_bolt-0.9.0.tar.gz", hash = "sha256:62e251c4a63fbc9e2672586323099269e6e176a4dc5ac96c62f82f9fbc3aa230", size = 15422470, upload-time = "2026-07-05T13:11:11.384Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a8/5f/1ace585d3686f99f053e77db70876d7ff881b211439a8c043f5003f48337/django_bolt-0.9.1.tar.gz", hash = "sha256:ce199a1bd844025c8887c7778d473226115071ca7c2d6c608e8cccdbb06f841b", size = 15429705, upload-time = "2026-07-17T14:01:51.773Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e2/69/6782a672188cd55b8c3fa5b277c063c59e2977bdce159e92a097a0cf37fd/django_bolt-0.9.0-cp312-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:bdda9367c6c05a1709781d403ab2b367133149c284fe77fb3841bfb1c4b0afae", size = 6515229, upload-time = "2026-07-05T13:11:04.956Z" },
-    { url = "https://files.pythonhosted.org/packages/10/2d/2c1a3dd62c9bf8c39fc605021b0d82e458aadf290bc26cba0dd400edd3da/django_bolt-0.9.0-cp312-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:200d9a88f57dae764ee75a2c7706c528d0d4ce8d0b30ad95183108f8e8d4ebe6", size = 3751975, upload-time = "2026-07-05T13:11:06.802Z" },
-    { url = "https://files.pythonhosted.org/packages/7a/04/cf6d622debd816c11c734a93b1c60753049c3bf025c0ccb4219fddb21539/django_bolt-0.9.0-cp312-abi3-win_amd64.whl", hash = "sha256:72264ec6a6792b49b33eb082dc6dabcfbad1059863f72fad863e21360ce11682", size = 3462372, upload-time = "2026-07-05T13:11:08.624Z" },
+    { url = "https://files.pythonhosted.org/packages/0a/e7/fbe5f6230269054cc847ad9766dafc6c29796396230ac87e4746247d8e3a/django_bolt-0.9.1-cp312-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:38b27a29b1578953827337edc64645da91e3dc928134b6ee1d2451001c52fb6c", size = 6517745, upload-time = "2026-07-17T14:01:45.876Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/c5/50c0d6ffd8742875d31229d28a73e9bf112d58855288aaab6be7a37d5d64/django_bolt-0.9.1-cp312-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a6b824262e3a333255f84ebbffa10be8bc4565a62b292c96af3c8b55de71fecd", size = 3635875, upload-time = "2026-07-17T14:01:47.388Z" },
+    { url = "https://files.pythonhosted.org/packages/df/70/df8f0fd4a9380c29125bfaffd0a53703d1cb028eeb222f10bcb97b51102e/django_bolt-0.9.1-cp312-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:63e6ddc0178a64ad4f4763e54e740dcd798cb66da51a13daf00123f7998c6d26", size = 3753966, upload-time = "2026-07-17T14:01:48.689Z" },
+    { url = "https://files.pythonhosted.org/packages/c3/fd/a41cbe1bdf2746aa3f52b8be86c27381a8f1899682f339ae955b069c3dd9/django_bolt-0.9.1-cp312-abi3-win_amd64.whl", hash = "sha256:5446e423c5df693e39cb7d7a38a2f37cdd4b87ed44dc70aad1934863aa8d6def", size = 3464076, upload-time = "2026-07-17T14:01:50.084Z" },
 ]
 
 [[package]]
