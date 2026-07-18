@@ -18,3 +18,7 @@ class UserResponse(msgspec.Struct):
     last_name: str
     is_staff: bool
     is_active: bool
+
+
+class TokenRefreshResponse(msgspec.Struct):
+    token: str
