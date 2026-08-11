@@ -4,7 +4,7 @@ import uuid
 import jwt
 from django.conf import settings
 from django.contrib.auth import aauthenticate, get_user_model
-from django_bolt import BoltAPI, Request
+from django_bolt import BoltAPI, OpenAPIConfig, Request
 from django_bolt.auth import (
     IsAuthenticated,
     JWTAuthentication,
@@ -21,9 +21,14 @@ from .schemas import LoginRequest, RegisterRequest, UserResponse
 
 User = get_user_model()
 api = BoltAPI(
+    openapi_config=OpenAPIConfig(
+        title="Django Bolt App",
+        description="Demo App using django-bolt framework",
+        version="1.0.0",
+    ),
     django_middleware={
         "exclude": ["django.middleware.csrf.CsrfViewMiddleware"],
-    }
+    },
 )
 
 ACCESS_TTL = 300
