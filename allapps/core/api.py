@@ -1,7 +1,7 @@
 import time
 import uuid
 
-import jwt as pyjwt
+import jwt
 from django.conf import settings
 from django.contrib.auth import aauthenticate, get_user_model
 from django_bolt import BoltAPI, Request
@@ -67,7 +67,7 @@ def _mint_access_token(user_id, *, ver=0, oat=None, amr=None):
         claims["oat"] = oat
     if amr:
         claims["amr"] = amr
-    return pyjwt.encode(claims, settings.SECRET_KEY, algorithm="HS256")
+    return jwt.encode(claims, settings.SECRET_KEY, algorithm="HS256")
 
 
 def _set_refresh_cookie(response, pair):
