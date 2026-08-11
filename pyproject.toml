@@ -8,5 +8,5 @@ dependencies = [
     "django-bolt>=0.9.0",
 ]
 
-# [tool.ruff.lint.flake8-bugbear]
-# extend-immutable-calls = ["django_bolt.params.Depends"]
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["django_bolt.params.Depends"]
