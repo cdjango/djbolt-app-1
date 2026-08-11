@@ -1,0 +1,37 @@
+@baseURL = http://127.0.0.1:8000/auth
+
+###
+POST {{baseURL}}/register/
+Content-Type: application/json
+
+{
+  "email": "a@a.com",
+  "password": "1234"
+}
+
+###
+# @name loginRequest
+POST {{baseURL}}/login/
+Content-Type: application/json
+
+{
+  "email": "a@a.com",
+  "password": "1234"
+}
+
+###
+@accessToken = {{refreshRequest.response.body.access_token}}
+@accessToken = {{loginRequest.response.body.access_token}}
+
+###
+GET {{baseURL}}/me/
+Authorization: Bearer {{accessToken}}
+
+###
+POST {{baseURL}}/logout/
+Authorization: Bearer {{accessToken}}
+
+###
+# @name refreshRequest
+POST {{baseURL}}/refresh/
+Sec-Fetch-Site: same-origin
