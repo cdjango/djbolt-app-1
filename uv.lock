@@ -69,7 +69,7 @@ wheels = [
 
 [[package]]
 name = "django-bolt"
-version = "0.10.0"
+version = "0.10.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -81,12 +81,12 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "uvloop", marker = "sys_platform != 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/f1/967ff1809d594beb1e2c24f718c07952bed09018235c11cfc3c9bfb2ab49/django_bolt-0.10.0.tar.gz", hash = "sha256:486ff51dbe9f53a5261b5cda07f8f1facc33e1fe8e5609f5ded719258f8f27b4", size = 15615178, upload-time = "2026-08-08T18:34:36.866Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7d/70/92c613013cfb7bac7fbea8d86ba6dfe87d464b3de72476800f8176a8a895/django_bolt-0.10.2.tar.gz", hash = "sha256:71f180f556404e8ee981f60083a0b5d5c0b2bb2014bfceec1652b72ec5d1c5e3", size = 1566486, upload-time = "2026-08-16T17:33:28.724Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/68/91/af528edb8fd4b6e74bf55f04e3101c892cbccb74cd86897bfd8497128b75/django_bolt-0.10.0-cp312-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:dc10302e5fb3c5404bdbadb2f219cd02a25e0b748652ec05576e5358fa4d7771", size = 9805766, upload-time = "2026-08-08T18:34:27.808Z" },
-    { url = "https://files.pythonhosted.org/packages/ca/8f/e8303954ed8a12f5962708e10717798b33a97e024ba10369d102567c95ed/django_bolt-0.10.0-cp312-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8e6ae896c6982d23eef5efe57cb803bea79fe61a4b2ff47ca1c9ec426b114aff", size = 5233198, upload-time = "2026-08-08T18:34:30.43Z" },
-    { url = "https://files.pythonhosted.org/packages/e3/54/8ba06fc559321df89fe510c29bb8441f8f237913ad41005c58d216e14662/django_bolt-0.10.0-cp312-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dcf6fcbd5610c952f624b69a46be19d31fe6a251ddb80190de543ffdf7b13e1f", size = 5510772, upload-time = "2026-08-08T18:34:32.335Z" },
-    { url = "https://files.pythonhosted.org/packages/28/4d/e768de644188a30572f8c64b6e6d5c93a1083bf50e45f0185347b32be76f/django_bolt-0.10.0-cp312-abi3-win_amd64.whl", hash = "sha256:fad8128d39e3457279427623658d84c14811f56df551c775027b04aef3557bbe", size = 4864262, upload-time = "2026-08-08T18:34:34.248Z" },
+    { url = "https://files.pythonhosted.org/packages/9a/07/24ec71eca0d2974f226956fc5991632a8c0ec166a63a735f0954ab5e5dbe/django_bolt-0.10.2-cp312-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:2c53c0b069bd5aeb7fe3f6db02277ec7a7798c18ee0e5f1ac2107d37f0f6cacf", size = 10146696, upload-time = "2026-08-16T17:33:20.489Z" },
+    { url = "https://files.pythonhosted.org/packages/63/19/ad9ae6adc37a6a1cb1c0b7a726937097229cc287147b01e09545d4def9a4/django_bolt-0.10.2-cp312-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1413444960db245647785b7e55b6d7fd3db469981123eaee190c3cd13df6f14a", size = 5411498, upload-time = "2026-08-16T17:33:22.897Z" },
+    { url = "https://files.pythonhosted.org/packages/58/e5/5d5003946b0a24cbf8293e2e09ad4559f0314d1bf3385ad28cd85e1267d4/django_bolt-0.10.2-cp312-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:048198c78fc3c336102914f839b60dabbb2ff90a540a867b63d3144f216b808a", size = 5711714, upload-time = "2026-08-16T17:33:24.643Z" },
+    { url = "https://files.pythonhosted.org/packages/f1/fb/383f4faecdc561704618b9dbb55113dd997b7787f6c54cddd8a14fcf8fa3/django_bolt-0.10.2-cp312-abi3-win_amd64.whl", hash = "sha256:88f9498b40541f2320d3cbd8118d24db229ed5db9e7ea7ceb5e8e7777dbdd262", size = 5025291, upload-time = "2026-08-16T17:33:26.562Z" },
 ]
 
 [[package]]
@@ -139,11 +139,11 @@ wheels = [
 
 [[package]]
 name = "idna"
-version = "3.18"
+version = "3.19"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/cd/63/9496c57188a2ee585e0f1db071d75089a11e98aa86eb99d9d7618fc1edce/idna-3.18.tar.gz", hash = "sha256:ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848", size = 196711, upload-time = "2026-06-02T14:34:07.794Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5f/f7/abb373e5757eaec4b922b92f97ec8d6d7e057cf06778247604fbc4e7c3f3/idna-3.19.tar.gz", hash = "sha256:5e0811a4383b21dc5838069f801c4fb62113b7447663d2530d2bd6e77b49bf15", size = 215237, upload-time = "2026-08-18T05:14:24.27Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/5e/d4e9f1a599fb8e573b7b87160658329fbf28d19eac2718f51fc3def3aa5a/idna-3.18-py3-none-any.whl", hash = "sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2", size = 65455, upload-time = "2026-06-02T14:34:06.319Z" },
+    { url = "https://files.pythonhosted.org/packages/57/b0/0e52c878c53f245edd3a11020f20979b3f490f245af532c7cae3027754b5/idna-3.19-py3-none-any.whl", hash = "sha256:815e7be7a7806d54abb586dc943addc79e8b2ee16915059658cbeff4b1b43bf4", size = 68550, upload-time = "2026-08-18T05:14:22.343Z" },
 ]
 
 [[package]]
@@ -207,11 +207,11 @@ wheels = [
 
 [[package]]
 name = "sqlparse"
-version = "0.5.5"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/90/76/437d71068094df0726366574cf3432a4ed754217b436eb7429415cf2d480/sqlparse-0.5.5.tar.gz", hash = "sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e", size = 120815, upload-time = "2025-12-19T07:17:45.073Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5f/d3/3f06a1006f2261d1342aefb3c71eed02f5d4ca5bdbecd86ebc12ad38306e/sqlparse-0.6.0.tar.gz", hash = "sha256:113c35c75365ab9cc9c7231d68c6428fb11c085fc8e9eb1ad659b7ddbf6cd2b9", size = 178477, upload-time = "2026-08-13T19:16:06.396Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/4b/359f28a903c13438ef59ebeee215fb25da53066db67b305c125f1c6d2a25/sqlparse-0.5.5-py3-none-any.whl", hash = "sha256:12a08b3bf3eec877c519589833aed092e2444e68240a3577e8e26148acc7b1ba", size = 46138, upload-time = "2025-12-19T07:17:46.573Z" },
+    { url = "https://files.pythonhosted.org/packages/d9/50/f00935da0ec7cbf325f8dc4f772ae46fbc7b672dd62876e73f0a94adda57/sqlparse-0.6.0-py3-none-any.whl", hash = "sha256:b861c0288ce2fa56209a9a6412d2e066ac664b3873b89c26c9d8415e8e32996f", size = 50070, upload-time = "2026-08-13T19:16:04.062Z" },
 ]
 
 [[package]]
