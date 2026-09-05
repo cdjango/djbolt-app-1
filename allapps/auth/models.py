@@ -47,3 +47,14 @@ class User(AbstractUser):
         if not self.username:
             self.username = self.email
         super().save(*args, **kwargs)
+
+
+class RevokedToken(models.Model):
+    jti = models.CharField(max_length=255, unique=True, db_index=True)
+    expires_at = models.DateTimeField(db_index=True)
+
+    class Meta:
+        indexes: ClassVar[list[models.Index]] = [
+            models.Index(fields=["jti"]),
+            models.Index(fields=["expires_at"]),
+        ]

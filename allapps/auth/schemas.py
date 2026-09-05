@@ -13,3 +13,7 @@ class UserOut(msgspec.Struct):
     last_name: str
     is_staff: bool
     is_active: bool
+
+
+class LoginOut(msgspec.Struct):
+    access_token: str
