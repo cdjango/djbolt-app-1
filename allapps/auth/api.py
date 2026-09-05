@@ -1,11 +1,15 @@
+from __future__ import annotations
+
+import time
+
 from django.contrib.auth import get_user_model
 from django_bolt import Router
 from django_bolt.auth import DjangoORMRevocation, IsAuthenticated, JWTAuthentication
 from django_bolt.auth.tokens import (
+    TokenPair,
     TokenRotationError,
     create_token_pair,
     rotate_refresh_token,
-    set_token_cookies,
 )
 from django_bolt.exceptions import HTTPException, Unauthorized
 from django_bolt.responses import JSON
@@ -38,6 +42,21 @@ async def _user_version(user_id: str) -> int:
         return 0
 
 
+def _set_refresh_cookie(response, pair: TokenPair):
+    now = time.time()
+    max_age = max(0, int(pair.refresh_claims["exp"]) - int(now))
+    response.set_cookie(
+        "refresh_token",
+        pair.refresh_token,
+        max_age=max_age,
+        path="/api/auth",
+        secure=True,
+        httponly=True,
+        samesite="Lax",
+    )
+    return response
+
+
 @router.post("/auth/login", tags=["auth"], summary="Log in with email and password")
 async def login_view(request, data: RegisterIn) -> LoginOut:
     user = await credential_validator(data)
@@ -51,12 +70,9 @@ async def login_view(request, data: RegisterIn) -> LoginOut:
         method="pwd",
     )
 
-    return set_token_cookies(
+    return _set_refresh_cookie(
         JSON({"access_token": pair.access_token}),
         pair,
-        refresh_cookie="refresh_token",
-        refresh_path="/api/auth",
-        secure=True,
     )
 
 
@@ -101,12 +117,9 @@ async def refresh_view(request):
     except TokenRotationError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    return set_token_cookies(
+    return _set_refresh_cookie(
         JSON({"ok": True}),
         pair,
-        refresh_cookie="refresh_token",
-        refresh_path="/api/auth",
-        secure=True,
     )
 
 
@@ -121,7 +134,6 @@ async def logout_view(request):
     claims = request["context"]["auth_claims"]
     await store.revoke_family(claims["fam"], exp=claims.get("exp"))
     response = JSON({"ok": True})
-    response.delete_cookie("access_token", path="/")
     response.delete_cookie("refresh_token", path="/api/auth")
     return response
 
@@ -141,7 +153,6 @@ async def logout_all_view(request):
         claims = request["context"]["auth_claims"]
         await store.revoke_family(claims["fam"], exp=claims.get("exp"))
     response = JSON({"ok": True})
-    response.delete_cookie("access_token", path="/")
     response.delete_cookie("refresh_token", path="/api/auth")
     return response
 

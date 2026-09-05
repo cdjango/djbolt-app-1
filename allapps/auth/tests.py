@@ -92,9 +92,7 @@ class LoginApiTests(TestCase):
             self.assertEqual(refresh_claims["typ"], "refresh")
 
             access = _cookie(c, "access_token")
-            self.assertIsNotNone(access)
-            self.assertTrue(access.has_nonstandard_attr("HttpOnly"))
-            self.assertEqual(access.value, body["access_token"])
+            self.assertIsNone(access)
 
     def test_login_invalid_password(self):
         with _client() as c:
@@ -169,7 +167,7 @@ class RefreshApiTests(TransactionTestCase):
             self.assertEqual(r.json(), {"ok": True})
             after = _cookie(c, "refresh_token").value
             self.assertNotEqual(before, after)
-            self.assertIsNotNone(_cookie(c, "access_token"))
+            self.assertIsNone(_cookie(c, "access_token"))
 
     def test_refresh_requires_cookie(self):
         with _client() as c:
