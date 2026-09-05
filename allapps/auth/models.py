@@ -1,5 +1,6 @@
 from typing import ClassVar
 
+from asgiref.sync import sync_to_async
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
@@ -24,6 +25,14 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self.create_user(email, password, **extra_fields)
+
+    async def acreate_user(self, email, password=None, **extra_fields):
+        return await sync_to_async(self.create_user)(email, password, **extra_fields)
+
+    async def acreate_superuser(self, email, password=None, **extra_fields):
+        return await sync_to_async(self.create_superuser)(
+            email, password, **extra_fields
+        )
 
 
 class User(AbstractUser):
