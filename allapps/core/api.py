@@ -4,7 +4,7 @@ import uuid
 import jwt
 from django.conf import settings
 from django.contrib.auth import aauthenticate, get_user_model
-from django_bolt import BoltAPI, OpenAPIConfig, Request
+from django_bolt import Request, Router
 from django_bolt.auth import (
     IsAuthenticated,
     JWTAuthentication,
@@ -20,16 +20,6 @@ from django_bolt.responses import JSON
 from .schemas import LoginRequest, RegisterRequest, UserResponse
 
 User = get_user_model()
-api = BoltAPI(
-    openapi_config=OpenAPIConfig(
-        title="Django Bolt App",
-        description="Demo App using django-bolt framework",
-        version="1.0.0",
-    ),
-    django_middleware={
-        "exclude": ["django.middleware.csrf.CsrfViewMiddleware"],
-    },
-)
 
 ACCESS_TTL = 300
 REFRESH_COOKIE = "refresh_token"
@@ -88,12 +78,15 @@ def _set_refresh_cookie(response, pair):
     )
 
 
-@api.get("/")
+router = Router()
+
+
+@router.get("/")
 def greeting():
     return {"message": "Hello World"}
 
 
-@api.post("/auth/register")
+@router.post("/auth/register")
 async def register(data: RegisterRequest):
     if await User.objects.filter(email=data.email).aexists():
         return JSON({"error": "Email already registered"}, status_code=409)
@@ -103,7 +96,7 @@ async def register(data: RegisterRequest):
     return {"user": _user_payload(user)}
 
 
-@api.post("/auth/login")
+@router.post("/auth/login")
 async def login_user(request: Request, data: LoginRequest):
     user = await aauthenticate(request, email=data.email, password=data.password)
     if user is None:
@@ -123,7 +116,7 @@ async def login_user(request: Request, data: LoginRequest):
     )
 
 
-@api.post("/auth/logout", auth=access_auth, guards=[IsAuthenticated()])
+@router.post("/auth/logout", auth=access_auth, guards=[IsAuthenticated()])
 async def logout(request: Request):
     claims = request["context"].get("auth_claims", {})
     jti = claims.get("jti")
@@ -134,12 +127,12 @@ async def logout(request: Request):
     )
 
 
-@api.get("/auth/me", auth=access_auth, guards=[IsAuthenticated()])
+@router.get("/auth/me", auth=access_auth, guards=[IsAuthenticated()])
 async def me(user=Depends(get_current_user)):
     return _user_payload(user)
 
 
-@api.post("/auth/refresh", auth=refresh_auth, guards=[IsAuthenticated()])
+@router.post("/auth/refresh", auth=refresh_auth, guards=[IsAuthenticated()])
 async def refresh_token(request: Request):
     claims = request["context"].get("auth_claims", {})
     try:
