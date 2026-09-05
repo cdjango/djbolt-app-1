@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django_bolt import Router
 from django_bolt.auth import (
-    InMemoryRevocation,
+    DjangoORMRevocation,
     IsAuthenticated,
     JWTAuthentication,
     JWTAuthViews,
@@ -13,7 +13,7 @@ from .schemas import RegisterIn, UserOut
 
 User = get_user_model()
 router = Router(prefix="/api")
-store = InMemoryRevocation()
+store = DjangoORMRevocation(model=User)
 
 
 async def credential_validator(creds: LoginCredentials) -> get_user_model() | None:
