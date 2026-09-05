@@ -1,5 +1,6 @@
 from django_bolt import BoltAPI, OpenAPIConfig
 
+from allapps.auth.api import router as auth_app_router
 from allapps.core.api import router as core_app_router
 
 api = BoltAPI(
@@ -14,4 +15,5 @@ api = BoltAPI(
     },
 )
 
+api.include_router(auth_app_router)
 api.include_router(core_app_router)

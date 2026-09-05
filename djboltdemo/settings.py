@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Third Party
     "django_bolt",
     # Project
+    "allapps.auth.apps.AuthConfig",
     "allapps.core.apps.CoreConfig",
 ]
 
@@ -118,6 +119,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-AUTH_USER_MODEL = "core.User"
+AUTH_USER_MODEL = "auth_app.User"
 
 STATIC_URL = "static/"
+
+BOLT_JWT = {
+    "ACCESS_TTL": 900,  # 15 min
+    "REFRESH_TTL": 604800,  # 7 days
+}
