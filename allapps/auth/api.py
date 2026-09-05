@@ -41,6 +41,9 @@ auth_views.register(router)
 
 @router.post("/auth/register", tags=["auth"])
 async def register(data: RegisterIn) -> UserOut:
+    """
+    Register / SignUP
+    """
     if await User.objects.filter(email=data.email).aexists():
         raise Unauthorized("Email exists")
     user = await User.objects.acreate_user(email=data.email, password=data.password)
@@ -61,6 +64,9 @@ jwt_auth = JWTAuthentication(revocation_store=store)
 
 @router.get("/auth/me", auth=[jwt_auth], guards=[IsAuthenticated()], tags=["auth"])
 async def me(request) -> UserOut:
+    """
+    Current user (me)
+    """
     # request.user is lazy-loaded, request.context has raw claims
     user = request.user
     # request.context = {"user_id": 1, "exp": ..., "type": "access"}
