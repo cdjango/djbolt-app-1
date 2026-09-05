@@ -239,6 +239,86 @@ class LogoutApiTests(TestCase):
             self.assertEqual(r.status_code, 401)
             self.assertEqual(r.json(), {"detail": "Invalid token"})
 
+    def test_access_token_invalidated_when_presented_at_logout(self):
+        with _client() as c:
+            login = c.post(
+                "/api/auth/login/",
+                json={"email": "logout@example.com", "password": "secret123"},
+            )
+            access = login.json()["access_token"]
+            auth = {"Authorization": f"Bearer {access}"}
+
+            before = c.get("/api/auth/me/", headers=auth)
+            self.assertEqual(before.status_code, 200)
+
+            lo = c.post("/api/auth/logout/", headers={**SAME_ORIGIN_HEADERS, **auth})
+            self.assertEqual(lo.status_code, 200)
+
+            after = c.get("/api/auth/me/", headers=auth)
+            self.assertEqual(after.status_code, 401)
+
+        with _client() as c:
+            login = c.post(
+                "/api/auth/login/",
+                json={"email": "logout@example.com", "password": "secret123"},
+            )
+            fresh = login.json()["access_token"]
+            self.assertEqual(login.status_code, 200)
+            self.assertEqual(
+                c.get(
+                    "/api/auth/me/", headers={"Authorization": f"Bearer {fresh}"}
+                ).status_code,
+                200,
+            )
+
+    def test_logout_invalidates_only_presented_access_token(self):
+        User.objects.create_user(email="other@example.com", password="secret123")
+
+        with _client() as c:
+            other_login = c.post(
+                "/api/auth/login/",
+                json={"email": "other@example.com", "password": "secret123"},
+            )
+            other_access = other_login.json()["access_token"]
+            self.assertEqual(
+                c.get(
+                    "/api/auth/me/", headers={"Authorization": f"Bearer {other_access}"}
+                ).status_code,
+                200,
+            )
+
+            c.cookies.clear()
+            login = c.post(
+                "/api/auth/login/",
+                json={"email": "logout@example.com", "password": "secret123"},
+            )
+            access = login.json()["access_token"]
+            self.assertEqual(
+                c.get(
+                    "/api/auth/me/", headers={"Authorization": f"Bearer {access}"}
+                ).status_code,
+                200,
+            )
+
+            lo = c.post(
+                "/api/auth/logout/",
+                headers={**SAME_ORIGIN_HEADERS, "Authorization": f"Bearer {access}"},
+            )
+            self.assertEqual(lo.status_code, 200)
+
+            self.assertEqual(
+                c.get(
+                    "/api/auth/me/", headers={"Authorization": f"Bearer {access}"}
+                ).status_code,
+                401,
+            )
+            self.assertEqual(
+                c.get(
+                    "/api/auth/me/", headers={"Authorization": f"Bearer {other_access}"}
+                ).status_code,
+                200,
+            )
+
 
 class LogoutAllApiTests(TestCase):
     def setUp(self):
@@ -272,3 +352,64 @@ class LogoutAllApiTests(TestCase):
             )
             self.assertEqual(r.status_code, 401)
             self.assertEqual(r.json(), {"detail": "Invalid token"})
+
+    def test_access_token_invalidated_immediately_after_logout_all(self):
+        with _client() as c:
+            login = c.post(
+                "/api/auth/login/",
+                json={"email": "logoutall@example.com", "password": "secret123"},
+            )
+            access = login.json()["access_token"]
+            auth = {"Authorization": f"Bearer {access}"}
+
+            before = c.get("/api/auth/me/", headers=auth)
+            self.assertEqual(before.status_code, 200)
+
+            lo = c.post("/api/auth/logout-all/", headers=SAME_ORIGIN_HEADERS)
+            self.assertEqual(lo.status_code, 200)
+
+            after = c.get("/api/auth/me/", headers=auth)
+            self.assertEqual(after.status_code, 401)
+            self.assertEqual(after.json(), {"detail": "Invalid token"})
+
+    def test_new_login_works_after_logout_all(self):
+        User.objects.create_user(email="refresh@example.com", password="secret123")
+
+        def do_flow(email):
+            with _client() as c:
+                c.post(
+                    "/api/auth/login/", json={"email": email, "password": "secret123"}
+                )
+                lo = c.post("/api/auth/logout-all/", headers=SAME_ORIGIN_HEADERS)
+                self.assertEqual(lo.status_code, 200)
+
+            with _client() as c:
+                login = c.post(
+                    "/api/auth/login/", json={"email": email, "password": "secret123"}
+                )
+                self.assertEqual(login.status_code, 200)
+                access = login.json()["access_token"]
+                me = c.get(
+                    "/api/auth/me/", headers={"Authorization": f"Bearer {access}"}
+                )
+                self.assertEqual(me.status_code, 200)
+
+        do_flow("logoutall@example.com")
+        do_flow("refresh@example.com")
+
+
+class MeVersionRevocationTests(TestCase):
+    def test_me_rejects_token_from_previous_version(self):
+        User.objects.create_user(email="meversion@example.com", password="secret123")
+        with _client() as c:
+            login = c.post(
+                "/api/auth/login/",
+                json={"email": "meversion@example.com", "password": "secret123"},
+            )
+            access = login.json()["access_token"]
+            auth = {"Authorization": f"Bearer {access}"}
+            self.assertEqual(c.get("/api/auth/me/", headers=auth).status_code, 200)
+
+            lo = c.post("/api/auth/logout-all/", headers=SAME_ORIGIN_HEADERS)
+            self.assertEqual(lo.status_code, 200)
+            self.assertEqual(c.get("/api/auth/me/", headers=auth).status_code, 401)

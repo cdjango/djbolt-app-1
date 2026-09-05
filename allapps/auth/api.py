@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import time
 
+import jwt
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django_bolt import Router
-from django_bolt.auth import DjangoORMRevocation, IsAuthenticated, JWTAuthentication
+from django_bolt.auth import IsAuthenticated, JWTAuthentication
 from django_bolt.auth.tokens import (
     TokenPair,
     TokenRotationError,
@@ -14,11 +16,12 @@ from django_bolt.auth.tokens import (
 from django_bolt.exceptions import HTTPException, Unauthorized
 from django_bolt.responses import JSON
 
+from .revocation import VersionedRevocation
 from .schemas import LoginOut, RegisterIn, UserOut
 
 User = get_user_model()
 router = Router(prefix="/api")
-store = DjangoORMRevocation(model="auth_app.RevokedToken")
+store = VersionedRevocation(model="auth_app.RevokedToken")
 
 
 async def credential_validator(creds: RegisterIn) -> get_user_model() | None:
@@ -74,6 +77,25 @@ async def login_view(request, data: RegisterIn) -> LoginOut:
         JSON({"access_token": pair.access_token}),
         pair,
     )
+
+
+async def revoke_presented_access_token(request):
+    headers = request["headers"] or {}
+    auth = headers.get("authorization") or headers.get("Authorization", "")
+    if not auth.lower().startswith("bearer "):
+        return
+    token = auth.split(" ", 1)[1].strip()
+    if not token:
+        return
+    try:
+        claims = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    except jwt.InvalidTokenError:
+        return
+    if claims.get("typ") != "access":
+        return
+    jti = claims.get("jti")
+    if jti:
+        await store.revoke(jti, exp=claims.get("exp"))
 
 
 @router.post("/auth/register", tags=["auth"])
@@ -132,6 +154,7 @@ async def refresh_view(request):
 )
 async def logout_view(request):
     claims = request["context"]["auth_claims"]
+    await revoke_presented_access_token(request)
     await store.revoke_family(claims["fam"], exp=claims.get("exp"))
     response = JSON({"ok": True})
     response.delete_cookie("refresh_token", path="/api/auth")
@@ -147,11 +170,7 @@ async def logout_view(request):
 )
 async def logout_all_view(request):
     user_id = request["context"]["user_id"]
-    try:
-        await store.bump_user_version(user_id)
-    except NotImplementedError:
-        claims = request["context"]["auth_claims"]
-        await store.revoke_family(claims["fam"], exp=claims.get("exp"))
+    await store.bump_user_version(user_id)
     response = JSON({"ok": True})
     response.delete_cookie("refresh_token", path="/api/auth")
     return response
@@ -165,6 +184,12 @@ async def me(request) -> UserOut:
     """
     Current user (me)
     """
+    claims = request["context"]["auth_claims"]
+    user_id = claims.get("sub")
+    token_version = int(claims.get("ver", 0))
+    current_version = await store.get_user_version(str(user_id))
+    if token_version != current_version:
+        raise HTTPException(status_code=401, detail="Invalid token")
     user = request.user
     return UserOut(
         id=user.id,

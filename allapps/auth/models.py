@@ -58,3 +58,8 @@ class RevokedToken(models.Model):
             models.Index(fields=["jti"]),
             models.Index(fields=["expires_at"]),
         ]
+
+
+class UserTokenVersion(models.Model):
+    user_id = models.CharField(max_length=255, primary_key=True)
+    version = models.PositiveIntegerField(default=0)
